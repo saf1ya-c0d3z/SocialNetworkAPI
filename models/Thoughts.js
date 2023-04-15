@@ -1,8 +1,8 @@
 const { Schema, model } = require("mongoose");
 
-const thoughtSchema = new Schema(
+const thoughtsSchema = new Schema(
   {
-    thoughtText: {
+    thoughtsText: {
       type: String,
       required: true,
       minLength: 1,
@@ -23,7 +23,7 @@ const thoughtSchema = new Schema(
     reactions: [
       {
         type: Schema.Types.ObjectId,
-        ref: "thought",
+        ref: "thoughts",
       },
     ],
   },
@@ -67,14 +67,14 @@ const reactionSchema = new Schema(
 
 // Create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query
 
-thoughtSchema
+reactionSchema
   .virtual("reactionCount")
   // Getter
   .get(function () {
-    return this.reactionSchema.length;
+    return this.thought.length;
   });
 
 // Initialize our Post model
-const Thought = model("thought", thoughtSchema);
+const Thought = model("thoughts", thoughtsSchema);
 
 module.exports = Thought;
