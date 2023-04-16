@@ -1,9 +1,9 @@
 const { getMaxListeners } = require("../models/Thoughts");
 
 const users = [
-  { userName: "billyjoe123", email: "billyjoe123@gmail.com" },
-  { userName: "niitasoline321", email: "niitasoline321@gmail.com" },
-  { userName: "ToriJone", email: "torijone@gmail.com" },
+  { userName: "billyjoe123", email: "billyjoe123@gmail.com", thoughts: [] },
+  { userName: "niitasoline321", email: "niitasoline321@gmail.com", thoughts: [] },
+  { userName: "ToriJone", email: "torijone@gmail.com", thoughts: [] },
 ];
 
 const thoughts = [

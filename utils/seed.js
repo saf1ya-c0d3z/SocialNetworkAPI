@@ -1,11 +1,11 @@
-const connection = require('../config/connection');
-const { User, Thoughts } = require('../models');
-const { users, thoughts } = require('./data');
+const connection = require("../config/connection");
+const { User, Thoughts } = require("../models");
+const { users, thoughts } = require("./data");
 
-connection.on('error', (err) => err);
+connection.on("error", (err) => err);
 
-connection.once('open', async () => {
-  console.log('connected');
+connection.once("open", async () => {
+  console.log("connected");
 
   // Drop existing courses
   await User.deleteMany({});
@@ -13,23 +13,17 @@ connection.once('open', async () => {
   // Drop existing students
   await Thoughts.deleteMany({});
 
-  // Create empty array to hold the students
  
 
- 
-
+  const thoughtDocuments = await Thoughts.insertMany(thoughts);
+  users.forEach((user) => {
+    const userThoughts = thoughtDocuments.filter((thought) => {
+      return thought.userName === user.userName;
+    });
+    user.thoughts.push(...userThoughts.map((thought) => thought.id));
+  });
   await User.collection.insertMany(users);
 
-
-
-  await Thoughts.collection.insertMany(thoughts);
-
- 
-
-
-
-
-  console.info('Seeding complete! 🌱');
+  console.info("Seeding complete! 🌱");
   process.exit(0);
 });
-

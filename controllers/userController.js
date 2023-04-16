@@ -1,29 +1,45 @@
 const { User } = require('../models');
 
+
 module.exports = {
-  getPosts(req, res) {
-    Post.find()
-      .populate({ path: 'tags', select: '-__v' })
-      .then((posts) => res.json(posts))
+  getAllUsers(req, res) {
+    User.find()
+      .populate({ path: 'thoughts',  select: '-__v' })
+      .populate({ path: 'friends',  select: '-__v' })
+      .then((user) => res.json(user))
       .catch((err) => {
         console.error({ message: err });
         return res.status(500).json(err);
       });
   },
-  getSinglePost(req, res) {
-    Post.findOne({ _id: req.params.postId })
-      .populate({ path: 'tags', select: '-__v' })
-      .then((post) =>
-        !post
+  getSingleUser(req, res) {
+    User.findOne({ _id: req.params.userId })
+    .populate({ path: 'thoughts',  select: '-__v' })
+    .populate({ path: 'friends',  select: '-__v' })
+      .then((user) =>
+        !user
           ? res.status(404).json({ message: 'No post with that ID' })
-          : res.json(post)
+          : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
   },
-  // create a new post
-  createPost(req, res) {
-    Post.create(req.body)
-      .then((post) => res.json(post))
+  // create a new User
+  postNewUser(req, res) {
+    User.create(req.body)
+      .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
+  },
+  updateById(req, res) {
+  
+  },
+  removeById(req, res) {
+   
+  },
+  // create a new User
+  addFriend(req, res) {
+   
+  },
+  removeFriend(req, res) {
+   
   },
 };
