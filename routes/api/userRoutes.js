@@ -7,7 +7,7 @@ const {
   removeById,
   addFriend,
   removeFriend,
-} = require('../../api/users');
+} = require('../../controllers/userController');
 
 
 router.route('/').get(getAllUsers).post(postNewUser);

@@ -15,18 +15,14 @@ const userSchema = new Schema(
     },
     thoughts: [{
       type: Schema.Types.ObjectId,
-      references: {
-        model: "thoughts",
-        key: "id",
-      },
+      ref: "thoughts",
+         
+      
     }],
 
     friends:[{
       type: Schema.Types.ObjectId,
-      references: {
-        model: 'user',
-        key: 'id',
-      },
+      ref: "user",
     }],
     
   },

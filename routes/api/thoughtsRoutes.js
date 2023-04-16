@@ -6,7 +6,7 @@ const {
   // (don't forget to push the created thought's _id to the associated user's thoughts array field)
   updateThById,
   removeThById,
-} = require('../../api/thoughts');
+} = require('../../controllers/thoughtsController');
 
 
 router.route('/').get(getAllThoughts).post(postNewThought);
