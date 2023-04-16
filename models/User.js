@@ -13,21 +13,22 @@ const userSchema = new Schema(
       //add unique
       //look into Matching email validation
     },
-    thoughts_id: {
-      type: DataTypes.INTEGER,
+    thoughts: [{
+      type: Schema.Types.ObjectId,
       references: {
-        model: "thought",
+        model: "thoughts",
         key: "id",
       },
-    },
-    friends_id: {
-      type: DataTypes.INTEGER,
+    }],
+
+    friends:[{
+      type: Schema.Types.ObjectId,
       references: {
         model: 'user',
         key: 'id',
       },
-    },
-    createdAt: Date,
+    }],
+    
   },
   {
     toJSON: {
@@ -42,14 +43,11 @@ userSchema
   .virtual('friendCount')
   // Getter
   .get(function () {
-    return `${this.first} ${this.last}`;
-  })
-  // Setter to set the first and last name
-  .set(function (v) {
-    const first = v.split(' ')[0];
-    const last = v.split(' ')[1];
-    this.set({ first, last });
+    return this.friends.length;
   });
+  
+  
+  
 
 
 const User = model("user", userSchema);

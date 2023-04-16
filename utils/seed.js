@@ -1,52 +1,51 @@
 const connection = require('../config/connection');
-const { Post, Tags } = require('../models');
-// Import functions for seed data
-const { getRandomColor, getRandomPost, genRandomIndex } = require('./data');
+const { Course, Student } = require('../models');
+const { getRandomName, getRandomAssignments } = require('./data');
 
-// Start the seeding runtime timer
-console.time('seeding');
+connection.on('error', (err) => err);
 
-// Creates a connection to mongodb
 connection.once('open', async () => {
-  // Delete the entries in the collection
-  await Post.deleteMany({});
-  await Tags.deleteMany({});
+  console.log('connected');
 
-  // Empty arrays for randomly generated posts and tags
-  const tags = [];
-  const posts = [];
+  // Drop existing courses
+  await Course.deleteMany({});
 
-  // Function to make a post object and push it into the posts array
-  const makePost = (text) => {
-    posts.push({
-      published: Math.random() < 0.5,
-      text,
-      tags: [tags[genRandomIndex(tags)]._id],
-    });
-  };
+  // Drop existing students
+  await Student.deleteMany({});
 
-  // Create 20 random tags and push them into the tags array
+  // Create empty array to hold the students
+  const students = [];
+
+  // Loop 20 times -- add students to the students array
   for (let i = 0; i < 20; i++) {
-    const tagname = getRandomColor();
+    // Get some random assignment objects using a helper function that we imported from ./data
+    const assignments = getRandomAssignments(20);
 
-    tags.push({
-      tagname,
-      color: tagname,
+    const fullName = getRandomName();
+    const first = fullName.split(' ')[0];
+    const last = fullName.split(' ')[1];
+    const github = `${first}${Math.floor(Math.random() * (99 - 18 + 1) + 18)}`;
+
+    students.push({
+      first,
+      last,
+      github,
+      assignments,
     });
   }
 
-  // Wait for the tags to be inserted into the database
-  await Tags.collection.insertMany(tags);
+  // Add students to the collection and await the results
+  await Student.collection.insertMany(students);
 
-  // For each of the tags that exist, make a random post of length 50
-  tags.forEach(() => makePost(getRandomPost(50)));
+  // Add courses to the collection and await the results
+  await Course.collection.insertOne({
+    courseName: 'UCLA',
+    inPerson: false,
+    students: [...students],
+  });
 
-  // Wait for the posts array to be inserted into the database
-  await Post.collection.insertMany(posts);
-
-  // Log out a pretty table for tags and posts, excluding the excessively long text property
-  console.table(tags);
-  console.table(posts, ['published', 'tags', '_id']);
-  console.timeEnd('seeding');
+  // Log out the seed data to indicate what should appear in the database
+  console.table(students);
+  console.info('Seeding complete! 🌱');
   process.exit(0);
 });
