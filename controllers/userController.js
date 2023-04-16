@@ -30,10 +30,33 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   updateById(req, res) {
-  
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $set: req.body },
+      { runValidators: true, new: true }
+    )
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: 'No user with this id!' })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
   },
   removeById(req, res) {
-   
+    Student.findOneAndRemove({ _id: req.params.userId })
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No such user exists' })
+        : Course.findOneAndUpdate(
+            { students: req.params.studentId },
+            { $pull: { students: req.params.studentId } },
+            { new: true }
+          )
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
   },
   // create a new User
   addFriend(req, res) {
