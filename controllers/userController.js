@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Thoughts } = require('../models');
 
 
 module.exports = {
@@ -43,26 +43,47 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   removeById(req, res) {
-    Student.findOneAndRemove({ _id: req.params.userId })
+    User.findOneAndDelete({ _id: req.params.userId })
     .then((user) =>
       !user
-        ? res.status(404).json({ message: 'No such user exists' })
-        : Course.findOneAndUpdate(
-            { students: req.params.studentId },
-            { $pull: { students: req.params.studentId } },
-            { new: true }
-          )
+        ? res.status(404).json({ message: 'No user with that ID' })
+        : Thoughts.deleteMany({ _id: { $in: user.thoughts } })
     )
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
-  },
+    .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
+    .catch((err) => res.status(500).json(err));
+},
+  
   // create a new User
   addFriend(req, res) {
-   
+    console.log('You are adding a friend');
+    console.log(req.body);
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
+      { runValidators: true, new: true }
+    )
+      .then((user) =>
+        !user
+          ? res
+              .status(404)
+              .json({ message: 'No user found with that ID :(' })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
   },
   removeFriend(req, res) {
-   
+    Student.findOneAndUpdate(
+      { _id: req.params.studentId },
+      { $pull: { assignment: { assignmentId: req.params.assignmentId } } },
+      { runValidators: true, new: true }
+    )
+      .then((student) =>
+        !student
+          ? res
+              .status(404)
+              .json({ message: 'No student found with that ID :(' })
+          : res.json(student)
+      )
+      .catch((err) => res.status(500).json(err));
   },
 };

@@ -5,13 +5,14 @@ const userSchema = new Schema(
     userName: {
       type: String,
       required: true,
-      //add unique and trimmed
+      trim: true,
+      unique: true
     },
     email: {
       type: String,
       required: true,
-      //add unique
-      //look into Matching email validation
+      unique: true,
+      match: /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/
     },
     thoughts: [{
       type: Schema.Types.ObjectId,
