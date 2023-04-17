@@ -3,7 +3,7 @@ const {
   getAllThoughts,
   getSingleThought,
   postNewThought, 
-  // (don't forget to push the created thought's _id to the associated user's thoughts array field)
+ 
   updateThoughtById,
   removeThoughtById,
   newReaction,
@@ -12,7 +12,7 @@ const {
 
 
 router.route('/').get(getAllThoughts).post(postNewThought);
-// POST to create a reaction stored in a single thought's reactions array field
+
 
 
 router.route('/:thoughtId').get(getSingleThought).put(updateThoughtById).delete(removeThoughtById);
