@@ -3,7 +3,6 @@ const {
   getAllThoughts,
   getSingleThought,
   postNewThought, 
- 
   updateThoughtById,
   removeThoughtById,
   newReaction,
